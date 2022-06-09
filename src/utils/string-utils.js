@@ -1,5 +1,4 @@
-export function hasWhiteSpace(s) 
-{
+export function hasWhiteSpace(s) {
     return new RegExp("/^\s+$/").test(s)
 }
 

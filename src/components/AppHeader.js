@@ -6,7 +6,7 @@ const {Header} = Layout;
 const items = [
     {
         key: "/",
-        label: "Home"
+        label: "Login"
     },
     {
         key: "/about",
