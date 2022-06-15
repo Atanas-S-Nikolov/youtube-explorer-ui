@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-
 import { Link, useNavigate } from "react-router-dom";
-
+import { useDispatch } from "react-redux/es/exports";
 import { Button, Divider, Input, Typography } from 'antd';
-
 import CredentialDto from '../model/CredentialDto';
 import { loginUser } from "../api/uams";
+import { login } from "../redux/authenticationSlice";
 
 const { Text } = Typography;
 
-function handleLogin(credentialDto, navigate) {
+function handleLogin(credentialDto, dispatch, navigate) {
     loginUser(credentialDto).then(() => {
+        dispatch(login(credentialDto.getUsername()));
         navigate("/channel-data");
     }).catch(error => {
         if (error.response.status === 401 | 404) {
@@ -25,6 +25,7 @@ function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     return(
         <div className="login">
@@ -49,7 +50,7 @@ function Login() {
             <Button type="primary" 
                 style={{ width: 175 }}
                 onClick={() => {
-                    handleLogin(new CredentialDto(username, password), navigate)
+                    handleLogin(new CredentialDto(username, password), dispatch, navigate)
                 }}
             >
                 Login

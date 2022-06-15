@@ -13,3 +13,9 @@ export function buildCredentialPayload(credentialDto) {
         "password": credentialDto.getPassword()
     });
 }
+
+export function buildLogoutPayload(LogoutDto) {
+    return JSON.stringify({
+        "username": LogoutDto.getUsername()
+    });
+}
