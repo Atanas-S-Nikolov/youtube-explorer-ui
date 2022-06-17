@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
+
 import { Button, Divider, Input } from 'antd';
 
 import RegisterDto from "../model/RegisterDto";
@@ -55,7 +56,7 @@ function Register() {
                 style={{ width: 325 }}
             />
             <Divider style={{ margin: 5, border: 'none' }}/>
-            <Input type='text'
+            <Input.Password type='text'
                 placeholder="Password"
                 onChange={event => {
                     event.preventDefault();

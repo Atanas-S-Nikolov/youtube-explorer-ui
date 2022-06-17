@@ -1,14 +1,22 @@
 import React, { useEffect } from "react";
-import { Button, Divider, Input, Typography } from 'antd';
+
+import { Button, Divider, Typography } from 'antd';
+
 import youtube from '../api/youtube';
+import { sendSearchHistory } from "../api/uams";
 import { isChannelNameValid } from '../utils/validation-utils';
 import DynamicGrid from "../utils/DynamicGrid";
 import ChannelDataGrid from "./ChannelDataGrid";
+import SearchBar from "./SearchBar";
 import EmbeddedVideoPlayer from "./EmbeddedVideoPlayer";
+
 import { useSelector, useDispatch } from "react-redux/es/exports";
-import { getChannelInformation, addVideos, changeChannelName, updateChannelId, updateErrorStatus, resetState } from "../redux/channelDataSlice"
+import { getChannelInformation, addVideos, updateChannelId, updateErrorStatus, resetState } from "../redux/channelDataSlice";
+
+import {v4 as uuidv4} from 'uuid';
 
 const { Text } = Typography;
+let searchHistory = [];
 
 function findChannelByName(channelName) {
     return youtube.get("search", {
@@ -30,8 +38,11 @@ function getChannelById(channelId, dispatch) {
     promise.then((response) => {
         const items = response.data.items;
         if (items) {
+            const customUrl = items[0].snippet.customUrl 
+                ? items[0].snippet.customUrl 
+                : `channel/${channelId}`;
             dispatch(getChannelInformation({
-                channelLink: "https://www.youtube.com/" + items[0].snippet.customUrl,
+                channelLink: "https://www.youtube.com/" + customUrl,
                 gridDisplayStatus: "inline",                    
                 subscribersCount: items[0].statistics.subscriberCount,
                 viewsCount: items[0].statistics.viewCount,
@@ -55,11 +66,6 @@ function getChannelUploads(uploadsId, dispatch) {
     promise.then((response) => {
         const videoIds = getVideoIds(response.data.items);
         const videosPromise = getChannelVideos(videoIds.join());
-        // const videos = [];
-        // videos.push(getMostViewedVideo(videosPromise));
-        // videos.push(getMostLikedVideo(videosPromise));
-        // videos.push(getMostCommentedVideo(videosPromise));
-        // every video is undefined
         resolveVideos(videosPromise, dispatch)
     });
 }
@@ -109,14 +115,7 @@ function buildVideo(video, label) {
     };
 }
 
-function onChangeChannelName(name, dispatch) {
-    dispatch(changeChannelName({
-        isChannelNameValid: isChannelNameValid(),
-        channelName: name.trim()
-    }));
-}
-
-function onGetChannelData(channelName, dispatch) {
+function onGetChannelData(channelName, username, dispatch) {
     let errorMessage = "";
     let linkBtnStatus = true;
 
@@ -125,6 +124,10 @@ function onGetChannelData(channelName, dispatch) {
             const id = response.data.items[0].id.channelId;
             dispatch(updateChannelId(id));
             getChannelById(id, dispatch);
+        });
+        sendSearchHistory(channelName, username)
+        .then((response) => {
+            searchHistory = response.data.searchHistory
         });
         linkBtnStatus = false;
     } else {
@@ -140,9 +143,9 @@ function onGetChannelData(channelName, dispatch) {
 function renderVideos(videos) {
     const rowsCount = Math.ceil(videos.length / 3);
 
-    videos = videos.map((video, index) => (
+    videos = videos.map((video) => (
         <EmbeddedVideoPlayer
-            key={index}
+            key={uuidv4()}
             videoId={video.id}
             videoTitle={video.title}
             displayStatus={video.displayStatus}
@@ -162,6 +165,7 @@ function ChannelData() {
     const dispatch = useDispatch();
     const { channelName, channelLink, channelNameError, isLinkBtnDisabled, gridDisplayStatus, subscribersCount,
          viewsCount, videosCount, videos } = useSelector((state) => state.channelData);
+    const { username } = useSelector((state) => state.authentication);
 
     // componentWillUnmount
     useEffect(() => {
@@ -174,18 +178,16 @@ function ChannelData() {
         <div className="channel-data">
             <Text type="danger">{channelNameError}</Text>
             <br/>
-            <Input className="channel-data-input"
-                type='text'
-                placeholder="Enter channel name" 
-                style={{ width: 325 }}
-                onChange={(event) => {
-                    event.preventDefault();
-                    onChangeChannelName(event.target.value, dispatch)
+            <SearchBar 
+                placeholder="Enter channel name"
+                data={searchHistory}
+                style={{
+                  width: 325,
                 }}
             />
             <Divider style={{ margin: 5, border: 'none' }}/>
             <Button 
-                onClick={() => onGetChannelData(channelName, dispatch)}
+                onClick={() => onGetChannelData(channelName, username, dispatch)}
                 >GET CHANNEL DATA</Button>
             <a href={channelLink} 
                 rel="noreferrer noopener" target="_blank" 

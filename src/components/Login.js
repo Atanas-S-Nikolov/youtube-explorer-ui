@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux/es/exports";
+
 import { Button, Divider, Input, Typography } from 'antd';
+
 import CredentialDto from '../model/CredentialDto';
 import { loginUser } from "../api/uams";
+
+import { useDispatch } from "react-redux/es/exports";
 import { login } from "../redux/authenticationSlice";
 
 const { Text } = Typography;
@@ -38,7 +41,7 @@ function Login() {
                 style={{ width: 325 }}
             />
             <Divider style={{ margin: 5, border: 'none' }}/>
-            <Input type='text'
+            <Input.Password type='text'
                 placeholder="Password"
                 onChange={event => {
                     event.preventDefault();
