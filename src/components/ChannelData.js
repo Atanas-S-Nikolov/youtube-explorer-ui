@@ -145,7 +145,7 @@ function renderVideos(videos) {
 
     videos = videos.map((video) => (
         <EmbeddedVideoPlayer
-            key={uuidv4()}
+            elementKey={uuidv4()}
             videoId={video.id}
             videoTitle={video.title}
             displayStatus={video.displayStatus}

@@ -22,5 +22,5 @@ export function logoutUser(logoutDto) {
 }
 
 export function sendSearchHistory(search, username) {
-    return uamsRequest.patch(`/search-history/${search}/username/${username}`);
+    return uamsRequest.put(`/search-history/${search}/username/${username}`);
 }

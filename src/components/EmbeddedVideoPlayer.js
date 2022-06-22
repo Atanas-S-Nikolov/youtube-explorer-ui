@@ -7,7 +7,7 @@ const { Title } = Typography;
 function EmbeddedVideoPlayer(props) {
     return(
         <div className='embedded-video-player'
-            key={props.key}
+            key={props.elementKey}
             style={{ display: props.displayStatus }}
         >
             <Divider/>

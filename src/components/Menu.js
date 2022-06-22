@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 
@@ -13,15 +13,6 @@ function Menu() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { username, isLoggedIn } = useSelector((state) => state.authentication);
-    const [isHovering, setIsHovering] = useState(false);
-
-    const handleMouseEnter = () => {
-      setIsHovering(true);
-    };
-  
-    const handleMouseLeave = () => {
-      setIsHovering(false);
-    };
 
     let handleLogout = () => {
         if(window.confirm("Do you really want to logout?")) {
@@ -41,24 +32,23 @@ function Menu() {
 
     return(
         <div className="nav-bar">
-            <div
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-            >
-                <Link to="/"
-                    style={{
-                        color: isHovering ? 'black' : 'white'
-                    }}
+            <div>
+                <Link className="home-link" to="/"
                 >Home</Link>
             </div>
-            <div
-                onClick={handleLogout} 
-                style={{
-                    visibility: isLoggedIn ? "visible" : "hidden",
-                    float: "right" 
-                 }}>
-                <img style={{ width: "50px" }} src={logoutIcon} alt="Logout"/>
-            </div>
+            {isLoggedIn && (
+                <>
+                    <div>
+                        <Link className="channel-data-link" to="/channel-data"
+                        >Channel data</Link>
+                    </div>
+                    <div
+                        onClick={handleLogout} 
+                        style={{ float: "right" }}>
+                        <img style={{ width: "50px" }} src={logoutIcon} alt="Logout"/>
+                    </div>
+                </>
+            )}
         </div>
     );
 }

@@ -10,7 +10,9 @@
 }
 
 .nav-bar > div {
-  width: 100px;
+  width: fit-content;
+  margin: 0px 5px 0px;
+  padding: 10px;
   height: inherit;
   display: inline-flex;
   align-items: center;
@@ -22,4 +24,12 @@
 .nav-bar > div:hover {
   background-color: whitesmoke;
   border: 1px solid;
+}
+
+.nav-bar > div > [class*="link"] {
+  color: white;
+}
+
+.nav-bar > div > [class*="link"]:hover {
+  color: black;
 }
