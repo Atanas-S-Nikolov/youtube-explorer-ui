@@ -2,7 +2,7 @@ import React from "react";
 
 import { useNavigate } from "react-router-dom";
 
-import { Card, Typography } from "antd";
+import { Card, Typography, Tooltip } from "antd";
 
 import uamsLogo from "../uams-logo.png";
 
@@ -14,14 +14,17 @@ function Home() {
     return(
         <div className="home">
             <Title>Login with:</Title>
-            <div style={{ width: 200, marginLeft: "auto", marginRight: "auto" }} onClick={() => {navigate("/login")}}>
-                <Card
-                    hoverable
-                    cover={<img src={uamsLogo} alt="UAMS logo"></img>}
-                >
-                    <Meta title="User Authentication Management Service"/>
-                </Card>
-            </div>
+
+            <Tooltip title="Login with User Authentication Management Service" placement="bottom">
+                <div style={{ width: 200, marginLeft: "auto", marginRight: "auto" }} onClick={() => {navigate("/login")}}>
+                    <Card
+                        hoverable
+                        cover={<img src={uamsLogo} alt="UAMS logo"></img>}
+                    >
+                        <Meta title="User Authentication Management Service"/>
+                    </Card>
+                </div>
+            </Tooltip>
         </div>
     )
 }
