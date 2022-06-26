@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { Button, Divider, Typography } from 'antd';
 
@@ -140,10 +140,10 @@ function onGetChannelData(channelName, username, dispatch) {
     }))
 }
 
-function renderVideos(videos) {
+function useRenderVideos(videos) {
     const rowsCount = Math.ceil(videos.length / 3);
 
-    videos = videos.map((video) => (
+    videos = useMemo(() => videos.map((video) => (
         <EmbeddedVideoPlayer
             elementKey={uuidv4()}
             videoId={video.id}
@@ -151,7 +151,7 @@ function renderVideos(videos) {
             displayStatus={video.displayStatus}
             label={video.label}
         />
-    ));
+    )), [videos]);
 
     const dynamicGrid = new DynamicGrid(rowsCount, 8);        
     return (
@@ -201,7 +201,7 @@ function ChannelData() {
                 videosCount={videosCount}
                 displayStatus={gridDisplayStatus}
             />
-            {renderVideos(videos)}
+            {useRenderVideos(videos)}
         </div>
     );
 } 
