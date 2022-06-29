@@ -11,7 +11,7 @@ import Register from './components/Register';
 import ChannelData from './components/ChannelData';
 import Menu from './components/Menu';
 
-const {Content} = Layout;
+const {Content, Footer} = Layout;
 
 function App() {
   return (
@@ -27,6 +27,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </Content>
+      <Footer className='footer'style={{backgroundColor: "white"}}>Copyright © 2022 YouTube Explorer. All rights reserved.</Footer>
     </Layout>
   );
 }
