@@ -44,8 +44,8 @@ function SearchBar({ placeholder, data }) {
 
   const handleOnChange = (name) => {
     dispatch(changeChannelName({
-        isChannelNameValid: isChannelNameValid(name),
-        channelName: name.trim()
+        isChannelNameValid: isChannelNameValid(name.trim()),
+        channelName: name
     }));
     handleFilter();
   }
